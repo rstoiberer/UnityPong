@@ -7,12 +7,24 @@ public class Ball : MonoBehaviour
     public float maxInitialAngle = 0.67f;
     public float moveSpeed = 1f;
     public float maxStartY = 4f;
+   
 
     private float startX = 0f;
 
+     private void Awake()
+    {
+        if (rb2d == null) rb2d = GetComponent<Rigidbody2D>();   // ensure assigned
+    }
+
     private void Start()
     {
-        InitialPush();
+        GameManager.instance.gameUI.onStartGame += OnStartGame;
+    }
+
+     private void OnStartGame()
+    {
+        ResetBall();
+        InitialPush();                                          // ← push when Start is clicked
     }
     private void InitialPush()
     {
@@ -42,4 +54,6 @@ public class Ball : MonoBehaviour
             InitialPush();
         }
     }
+
+    
 }
