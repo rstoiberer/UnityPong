@@ -9,9 +9,20 @@ public class Ball : MonoBehaviour
 
     private float startX = 0f;
 
+    public AudioClip sfxPaddle;
+    public AudioClip sfxWall;
+    public AudioClip sfxScore;
+
+    private AudioSource audioSource;
+
     private void Awake()
     {
         if (rb2d == null) rb2d = GetComponent<Rigidbody2D>();
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f; // 2D sound
     }
 
     private void Start()
@@ -83,15 +94,30 @@ public class Ball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var scoreZone = collision.GetComponent<ScoreZone>();
-        if (scoreZone)
-        {
-            // stop movement immediately on score
-            rb2d.linearVelocity = Vector2.zero;
-            rb2d.simulated = false;
+    var scoreZone = collision.GetComponent<ScoreZone>();
+    if (!scoreZone) return;
 
-            // notify manager (manager will fire onReset or onGameOver)
-            GameManager.instance.OnScoreZoneReached(scoreZone.id);
-        }
+    // play goal sfx once
+    if (sfxScore) audioSource.PlayOneShot(sfxScore);
+
+    // stop movement immediately
+    rb2d.linearVelocity = Vector2.zero;
+    rb2d.simulated = false;
+
+    // score ONCE
+    GameManager.instance.OnScoreZoneReached(scoreZone.id);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+    // Paddle hit?
+    if (collision.collider.GetComponent<Paddle>())
+    {
+        if (sfxPaddle) audioSource.PlayOneShot(sfxPaddle);
+    }
+    else
+    {
+        // Likely a wall (top/bottom). Tag walls as "Wall" if you want to be explicit.
+        if (sfxWall) audioSource.PlayOneShot(sfxWall);
+    }
     }
 }
