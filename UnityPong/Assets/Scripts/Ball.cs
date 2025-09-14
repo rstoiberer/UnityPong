@@ -22,7 +22,7 @@ public class Ball : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 0f; // 2D sound
+        audioSource.spatialBlend = 0f; 
     }
 
     private void Start()
@@ -82,7 +82,7 @@ public class Ball : MonoBehaviour
     {
         Vector2 dir = (Random.value < 0.5f ? Vector2.left : Vector2.right);
         dir.y = Random.Range(-maxInitialAngle, maxInitialAngle);
-        rb2d.linearVelocity = dir.normalized * moveSpeed;   // ✅ use velocity
+        rb2d.linearVelocity = dir.normalized * moveSpeed;   
     }
 
     private void ResetBall()
@@ -97,14 +97,14 @@ public class Ball : MonoBehaviour
     var scoreZone = collision.GetComponent<ScoreZone>();
     if (!scoreZone) return;
 
-    // play goal sfx once
+    
     if (sfxScore) audioSource.PlayOneShot(sfxScore);
 
-    // stop movement immediately
+ 
     rb2d.linearVelocity = Vector2.zero;
     rb2d.simulated = false;
 
-    // score ONCE
+    
     GameManager.instance.OnScoreZoneReached(scoreZone.id);
     }
     private void OnCollisionEnter2D(Collision2D collision)

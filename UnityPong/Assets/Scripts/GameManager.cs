@@ -1,5 +1,5 @@
 using UnityEngine;
-using System;  // needed for Action
+using System;  
 
 public class GameManager : MonoBehaviour
 {
@@ -14,9 +14,9 @@ public class GameManager : MonoBehaviour
     public int scorePlayer1, scorePlayer2;
     public ScoreText scoreTextLeft, scoreTextRight;
 
-    // ✅ Events used by Ball
-    public event Action onReset;     // fired after a point (no winner yet)
-    public event Action onGameOver;  // fired when someone wins
+    
+    public event Action onReset;     
+    public event Action onGameOver;  
 
     private bool gameOver;
 
@@ -55,15 +55,15 @@ public class GameManager : MonoBehaviour
         {
             gameOver = true;
             gameUI?.OnGameEnds(winnerId);
-            onGameOver?.Invoke();     // 🔔 tell Ball to stop
+            onGameOver?.Invoke();     
         }
         else
         {
-            onReset?.Invoke();        // 🔔 tell Ball to reset & auto-serve
+            onReset?.Invoke();        
         }
     }
 
-    // optional: called from Start button before first serve
+    
     public void ResetMatch()
     {
         gameOver = false;
